@@ -79,7 +79,7 @@ int try2load_image() {
     }
 }
 
-void ImguiWidget::configureImguiContext()
+void ImguiWidget::ConfigureImguiContext()
 {
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontDefault();
@@ -96,21 +96,36 @@ void ImguiWidget::configureImguiContext()
 }
 
 ImguiWidget::ImguiWidget(int left, int top, int right, int bot, int decoration):
-    ImgWindow(left, top, right, bot, decoration)
+    ImgWindow()
 {
+    Init(left, top, right, bot, decoration);
     SetWindowTitle("Imgui for X-Plane  by William Good");
     SetVisible(true);
     try2load_image();
 }
 
-void ImguiWidget::buildInterface() {
+void ImguiWidget::BuildInterface() {
 
     win_width = ImGui::GetWindowWidth();
     win_height = ImGui::GetWindowHeight();
 
     ImGui::TextUnformatted("Hello, World!");
-
+    ImGuiIO& io = ImGui::GetIO();
     ImGui::Text("Window size: width = %f  height = %f", win_width, win_height);
+    ImGui::Text("Want capture mouse: %i", io.WantCaptureMouse);
+    ImGui::Text("Want capture keyboard: %i", io.WantCaptureKeyboard);
+    ImGui::Text("Mouse position: x = %f  y = %f", io.MousePos.x, io.MousePos.y);
+    ImGui::Text("Is any items active or hovered: %i", ImGui::IsAnyItemHovered());
+    ImGui::SameLine();
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(450.0f);
+        ImGui::TextUnformatted("Longgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg popup");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
 
     ImGui::TextUnformatted("Two Widgets");
 

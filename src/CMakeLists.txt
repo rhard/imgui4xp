@@ -1,18 +1,21 @@
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories("/opt/XSDK/CHeaders/XPLM")
-include_directories("/opt/XSDK/CHeaders/Wrappers")
-include_directories("/opt/XSDK/CHeaders/Widgets")
-include_directories("/opt/XSDK/CHeaders")
+include_directories("../../../03_LIBS/XPSDK301/SDK/CHeaders/XPLM")
+include_directories("../../../03_LIBS/XPSDK301/SDK/CHeaders/Wrappers")
+include_directories("../../../03_LIBS/XPSDK301/SDK/CHeaders/Widgets")
+include_directories("../../../03_LIBS/XPSDK301/SDK/CHeaders")
 
 include_directories("../src")
 include_directories("../src/ImgWindow")
 include_directories("../src/imgui")
 
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+
 
 if(WIN32)
-	link_directories("/opt/XSDK/Libraries/Win")
-	link_directories("/usr/x86_64-w64-mingw32/lib")
+	link_directories("../../../03_LIBS/XPSDK301/SDK/Libraries/Win")
+	#link_directories("/usr/x86_64-w64-mingw32/lib")
 elseif(APPLE)
 	link_directories("/opt/XSDK/Libraries/Mac")
 endif()
@@ -23,9 +26,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DXPLM200=1 -DXPLM210=1 -DXPLM300=1 -DXP
 
 if(WIN32)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAPL=0 -DIBM=1 -DLIN=0 -DWIN64 -DNDEBUG -D_WINDOWS")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_MBCS -D_USRDLL -DCustomCommands_EXPORTS -DSIMDATA_EXPORTS")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_EXTERNAL_ALLOCATOR -std=c++11 -fexceptions -fpermissive")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wshadow -Wfloat-equal -pedantic -Wall -Wno-unused -Wno-terminate -Wno-missing-field-initializers")
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_MBCS -D_USRDLL -DCustomCommands_EXPORTS -DSIMDATA_EXPORTS")
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_EXTERNAL_ALLOCATOR -std=c++11 -fexceptions -fpermissive")
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wshadow -Wfloat-equal -pedantic -Wall -Wno-unused -Wno-terminate -Wno-missing-field-initializers")
 elseif(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAPL=1 -DIBM=0 -DLIN=0 -mmacosx-version-min=10.10")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused -Wno-missing-field-initializers -fPIC -O3 -DMACOSX")
@@ -53,3 +56,8 @@ endif()
 set_target_properties(imgui4xp PROPERTIES PREFIX "")
 set_target_properties(imgui4xp PROPERTIES OUTPUT_NAME "imgui4xp")
 set_target_properties(imgui4xp PROPERTIES SUFFIX ".xpl")
+
+
+ADD_CUSTOM_TARGET(build_and_copy ALL
+		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:imgui4xp> "Z:/X-Plane 11/Resources/plugins/imgui4xp/win_x64"
+		DEPENDS imgui4xp)

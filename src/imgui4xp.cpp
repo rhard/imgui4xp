@@ -33,7 +33,7 @@ XPLMWindowID xtextedit4vr_window;
 // static bool g_in_vr = false;
 int vr_is_enabled = 0;
 
-std::shared_ptr<ImguiWidget> imguiPtr;
+std::shared_ptr<ImguiWidget> imguiPtr, imguiPtr2;
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
     // Plugin details
@@ -47,6 +47,23 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
     // g_vr_dref = XPLMFindDataRef("sim/graphics/VR/enabled");
 
+    int left, top, right, bot;
+    XPLMGetScreenBoundsGlobal(&left, &top, &right, &bot);
+
+    int width = 800;
+    int height = 550;
+    int left_pad = 175;
+    int top_pad = 75;
+    int x = left + left_pad;
+    int y = top - top_pad;
+    // WindowDecoration decorate
+    // WindowDecorationNone = 0
+    // WindowDecorationRoundRectangle = 1
+    // WindowDecorationSelfDecorated = 2
+    // WindowDecorationSelfDecoratedResizable = 3
+    int decorate = 1;
+    imguiPtr = std::make_shared<ImguiWidget>(x, y, x + width, y - height, decorate);  // calls constructor
+    imguiPtr2 = std::make_shared<ImguiWidget>(x, y, x + width, y - height, decorate);  // calls constructor
 	return 1;
 }
 
@@ -63,23 +80,6 @@ PLUGIN_API int XPluginEnable(void) {
 PLUGIN_API void XPluginReceiveMessage(XPLMPluginID, intptr_t inMessage, void * inParam) {
     if(inMessage == XPLM_MSG_SCENERY_LOADED)
     {
-        int left, top, right, bot;
-        XPLMGetScreenBoundsGlobal(&left, &top, &right, &bot);
-
-        int width = 800;
-        int height = 550;
-        int left_pad = 175;
-        int top_pad = 75;
-        int x = left + left_pad;
-        int y = top - top_pad;
-        // WindowDecoration decorate
-        // WindowDecorationNone = 0
-        // WindowDecorationRoundRectangle = 1
-        // WindowDecorationSelfDecorated = 2
-        // WindowDecorationSelfDecoratedResizable = 3
-        int decorate = 1;
-        imguiPtr = std::make_shared<ImguiWidget>(x, y, x + width, y - height, decorate);  // calls constructor
-        imguiPtr->init(); // calls ImgWindow::init from the base class which in turn virtually calls the overridden function
 
     }
 }
